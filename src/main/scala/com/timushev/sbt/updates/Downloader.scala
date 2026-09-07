@@ -1,7 +1,6 @@
 package com.timushev.sbt.updates
 
 import com.timushev.sbt.updates.authentication.RepositoryAuthentication
-import org.apache.ivy.Ivy
 import sbt.Logger
 
 import java.io.InputStream
@@ -11,8 +10,7 @@ class Downloader(repositoryId: String, authentications: Seq[RepositoryAuthentica
   def startDownload(url: URL): InputStream = {
     val hostAuthentication = RepositoryAuthentication.find(url.getHost, repositoryId, authentications)
     val connection         = url.openConnection()
-    // Same as in org.apache.ivy.util.url.BasicURLHandler
-    connection.setRequestProperty("User-Agent", s"Apache Ivy/${Ivy.getIvyVersion}")
+    connection.setRequestProperty("User-Agent", "sbt-updates")
     // Otherwise Java sets a default that is not accepted by all remote repositories (AWS CodeArtifact as an example)
     connection.setRequestProperty("Accept", "*/*")
     hostAuthentication match {
